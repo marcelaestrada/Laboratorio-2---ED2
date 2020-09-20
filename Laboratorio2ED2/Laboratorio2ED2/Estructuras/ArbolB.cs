@@ -84,7 +84,7 @@ namespace Laboratorio2ED2
             }
             return mitadValues;
         }
-        public void division(Nodo<T> valores, int mitad, int max)
+        void division(Nodo<T> valores, int mitad, int max)
         {
             Nodo<T> nuevoNodoD = new Nodo<T>();
             T valor = valores.values[mitad];
@@ -137,7 +137,7 @@ namespace Laboratorio2ED2
                 }
             }
         }
-        public void insertarOrdenar(Nodo<T> node, T valor)
+        void insertarOrdenar(Nodo<T> node, T valor)
         {
             for (int i = 0; i < root.contador; i++)
             {
