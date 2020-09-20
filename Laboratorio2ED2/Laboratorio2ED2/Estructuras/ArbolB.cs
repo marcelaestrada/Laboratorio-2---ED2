@@ -94,11 +94,13 @@ namespace Laboratorio2ED2
                 int j = 0;
                 nuevoNodoD.values[j] = valores.values[i];
                 j++;
+                nuevoNodoD.contador++;
             }
 
             for (int i = mitad; i < max; i++)
             {
                 valores.values[i] = default(T);
+                valores.contador--;
             }
 
 
@@ -107,6 +109,7 @@ namespace Laboratorio2ED2
                 valores.padre.values[0] = valor;
                 valores.padre.hijoI = valores;
                 valores.padre.hijoD = nuevoNodoD;
+                valores.padre.contador++;
             }
             else
             {
@@ -117,6 +120,7 @@ namespace Laboratorio2ED2
                         if (valores.padre.values[i]==null)
                         {
                             valores.padre.values[i] = valor;
+                            valores.padre.contador++;
                         }
                     }
                     for(int i =0; i < valores.padre.contador; i++)
