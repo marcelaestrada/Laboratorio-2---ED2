@@ -27,7 +27,10 @@ namespace Laboratorio2ED2
             Hijos = new int[order];
             CountOfValues = 0;
             Order = order;
+            
         }
+
+        public int FixedSizedText => FixedSize();
 
 
         // El valaor del size está a discusión. 
@@ -35,8 +38,10 @@ namespace Laboratorio2ED2
         {
             /*180 es un aprox de cuantos caracteres puede tener un json, multiplicado por el número 
              * de valores que puede tener un nodo segun el grado que se envíe al arbol. */
-            int caracteresValores = 180 * (Order - 1);
-            return caracteresValores + 1;
+            /* int caracteresValores = 180 * (Order - 1);
+             return caracteresValores + 1;*/
+
+            return 1061;
 
 
         }
@@ -82,10 +87,19 @@ namespace Laboratorio2ED2
 
         public string ToFixedLengthString()
         {
-            string caracteresHijos = (8 * Order).ToString();
+           // string caracteresHijos = (8 * Order).ToString();
 
-            // return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|{string.Format("{0,}",HijosToString())}";
-            return "";
+             return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|" +
+                $"{string.Format("{0,-50}",HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}";
+           // return "";
+        }
+
+        public void WriteToFile(System.IO.FileStream file, int position)
+        {
+            int encabezado = 0;
+            file.Seek(position * FixedSizedText + encabezado, System.IO.SeekOrigin.Begin);
+            file.Write(Encoding.UTF8.GetBytes(ToFixedLengthString()), 0, FixedSizedText);
+            file.Flush();
         }
 
     }
