@@ -1,4 +1,5 @@
 ﻿using System;
+using Laboratorio2ED2;
 
 namespace PruebaArbol
 {
@@ -6,7 +7,8 @@ namespace PruebaArbol
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ArbolB<int> arbol = new ArbolB<int>();
+            arbol.Insertar(8, 5);
         }
     }
 }

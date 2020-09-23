@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Laboratorio2ED2\Laboratorio2ED2.csproj" />
+  </ItemGroup>
+
 </Project>
