@@ -22,7 +22,7 @@ namespace Laboratorio2ED2
             this.ruta = ruta;
 
             //Por motivos de depuración
-            this.ruta = @"c:\ArchivoPeliculas.txt";
+            //this.ruta = @"c:\ArchivoPeliculas.txt";
 
             path = File.Create(this.ruta);
             gradoArbol = grado;
@@ -45,14 +45,21 @@ namespace Laboratorio2ED2
 
         public void Insertar(T value, int idCorrespondiente)
         {
-            insertarEnNodo(value, idCorrespondiente);
+            string linea = LeerLineaArchivo(2, 1061, ruta);
+            convertirStringNodo(linea);
         }
 
         public void insertarEnNodo(T value, int id)
         {
             if (id != 1)
             {
-                //si hay nodo, hay que hacer comprobaciones 
+                //si hay nodo, recuperar raiz
+                //evaluar con los valores si es mayor o menor
+                //buscar hijo dependiendo del resultado anterior
+                //evaluar otra vez , recursividad
+                //al encontrar donde le corresponde, insertar y ver si hay que hacer división
+                //llamar al metodo división o solo insertar y enviar de nuevo al archivo 
+
 
             }
             else
@@ -80,11 +87,19 @@ namespace Laboratorio2ED2
         {
             Nodo<T> recuperado = new Nodo<T>(max, gradoArbol);
             string[] datos = aConvertir.Split("|");
-            String jsonString = File.ReadAllText(datos[2]);
-            String jsonString2 = File.ReadAllText(datos[3]);            
+            string[] hijosPosiciones = datos[2].Split("/");
+            String[] valuesDatos = datos[3].Split("/");            
 
             recuperado.Id = Convert.ToInt32(datos[0]);
             recuperado.Padre = Convert.ToInt32(datos[1]);
+            for(int i = 0; i < hijosPosiciones.Length; i++)
+            {
+                recuperado.Hijos[i] = Convert.ToInt32(hijosPosiciones[i]);
+            }
+            for (int i = 0; i < valuesDatos.Length; i++)
+            {
+                recuperado.Values[i] = (T)JsonConvert.DeserializeObject(valuesDatos[i]);
+            }
             return recuperado;
         }
         public void Eliminar(T value)
