@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -34,8 +35,6 @@ namespace Laboratorio2ED2
             }
         }
 
-
-
         public void Insertar(T value, int idCorrespondiente)
         {
             insertarEnNodo(value, idCorrespondiente);
@@ -55,17 +54,31 @@ namespace Laboratorio2ED2
                 nuevoNodo.Id = id;
                 nuevoNodo.Padre = -1;
                 nuevoNodo.Values[0] = value;
-                nuevoNodo.Order = nuevoNodo.GradoArbol = gradoArbol; //creo que seria lo mismo
+                nuevoNodo.Order = gradoArbol; 
                 nuevoNodo.CountOfValues++;
                 nuevoNodo.WriteToFile(path,1);
             }
         }
 
-        public void convertirRuta()
+        public void divisionNodo(String cambio, int id)
         {
+            Nodo<T> newNodo = new Nodo<T>(max, gradoArbol);
+            Nodo<T> newNodo2 = new Nodo<T>(max, gradoArbol);
 
+            
         }
 
+        public Nodo<T> convertirStringNodo(String aConvertir)
+        {
+            Nodo<T> recuperado = new Nodo<T>(max, gradoArbol);
+            string[] datos = aConvertir.Split("|");
+            String jsonString = File.ReadAllText(datos[2]);
+            String jsonString2 = File.ReadAllText(datos[3]);            
+
+            recuperado.Id = Convert.ToInt32(datos[0]);
+            recuperado.Padre = Convert.ToInt32(datos[1]);
+
+        }
         public void Eliminar(T value)
         {
             throw new NotImplementedException();
