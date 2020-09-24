@@ -9,7 +9,6 @@ namespace Laboratorio2ED2
 {
     internal class Nodo<T> where T : IComparable
     {
-        public int GradoArbol { get; set; }
         internal T[] Values { get; set; }
 
         internal int Id { get; set; }
