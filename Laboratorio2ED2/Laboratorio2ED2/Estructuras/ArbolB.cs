@@ -108,8 +108,9 @@ namespace Laboratorio2ED2
 
 
             
-            //Ir a posicion de raiz o nodo en la recursividad. 
-            //Hacer la lectura de archivo y asignar valores al nodo aux1. 
+            //Ir a posicion de raiz o nodo en la recursividad. ok
+            //Hacer la lectura de archivo y asignar valores al nodo aux1.ok
+            
             //Evaluear si el valor buscado es el mismo en el campo hijos. 
             //Si no, evaluear menor o mayor el x numero de veces
             //Usar el número de validaciones para ir a la posicion del arreglo hijos. 
