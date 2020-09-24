@@ -5,14 +5,13 @@ namespace Laboratorio2ED2
 {
     class Program
     {
+        
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-
-
-
-
-
+            ArbolB<int> arbol = new ArbolB<int>(5, @"c:\ArchivoPeliculas.txt");
+            arbol.Insertar(2, 2);
 
            /* FileStream file = new FileStream(@"C:\LabEstructurasII\Laboratorio-2---ED2\Laboratorio2ED2\PruebaArbol\FileTest.txt", 
             FileMode.Open, FileAccess.Read);
@@ -22,6 +21,7 @@ namespace Laboratorio2ED2
             file.Close();
 
             Console.WriteLine(respuesta);*/
+
         }
     }
 }
