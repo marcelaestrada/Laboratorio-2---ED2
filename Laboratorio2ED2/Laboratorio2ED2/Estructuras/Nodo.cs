@@ -73,7 +73,7 @@ namespace Laboratorio2ED2
             for (int i = 0; i < Values.Length; i++)
             {
                 if (i == Values.Length - 1)
-                    resultado += $"{JsonConvert.SerializeObject(Values[i])}";
+                    resultado += $"{JsonConvert.SerializeObject(Values[i])}\n";
                 else
                     resultado += $"{JsonConvert.SerializeObject(Values[i])}/";
             }
