@@ -7,14 +7,6 @@ using System.Text.Json.Serialization;
 
 namespace Laboratorio2ED2
 {
-<<<<<<< HEAD
-    public class Nodo<T> where T:IComparable
-    {
-        public T[] values { get; set; }
-        public int[] posicionI { get; set; }
-        public int[] posicionD { get; set; }
-        public int contador { get; set; }
-=======
     internal class Nodo<T> where T : IComparable
     {
         public int GradoArbol { get; set; }
@@ -109,7 +101,5 @@ namespace Laboratorio2ED2
             file.Write(Encoding.UTF8.GetBytes(ToFixedLengthString()), 0, FixedSizedText);
             file.Flush();
         }
-
->>>>>>> 185aedfa5b82579b5c175f6d0bf1e2bd48eb273d
     }
 }

@@ -7,8 +7,6 @@ namespace PruebaArbol
     {
         static void Main(string[] args)
         {
-            ArbolB<int> arbol = new ArbolB<int>();
-            arbol.Insertar(8, 5);
         }
     }
 }
