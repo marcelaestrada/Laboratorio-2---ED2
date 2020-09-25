@@ -1,4 +1,5 @@
 ﻿using System;
+using Laboratorio2ED2;
 
 namespace Laboratorio2ED2
 {
@@ -9,7 +10,7 @@ namespace Laboratorio2ED2
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            ArbolB<int> arbol = new ArbolB<int>(5, @"c:\ArchivoPeliculas.txt");
+            ArbolB<int> arbol = new ArbolB<int>(5, @"./ArchivoPeliculas.txt");
             arbol.Insertar(2, 2);
         }
     }

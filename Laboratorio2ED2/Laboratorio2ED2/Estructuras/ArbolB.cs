@@ -36,10 +36,12 @@ namespace Laboratorio2ED2
             if ((grado % 2) == 0)
             {
                 mitad = grado / 2;
+                mitad--;
             }
             else
             {
                 mitad = (grado + 1) / 2;
+                mitad--;
             }
         }
 
@@ -53,7 +55,11 @@ namespace Laboratorio2ED2
         {
             if (id != 1)
             {
+                Nodo<T> raiz = new Nodo<T>(max, gradoArbol);
                 //si hay nodo, recuperar raiz
+                String sRaiz = LeerLineaArchivo(1, raiz.FixedSizedText, ruta);
+                raiz = convertirStringNodo(sRaiz);
+
                 //evaluar con los valores si es mayor o menor
                 //buscar hijo dependiendo del resultado anterior
                 //evaluar otra vez , recursividad
@@ -75,14 +81,126 @@ namespace Laboratorio2ED2
             }
         }
 
-        public void divisionNodo(String cambio, int id)
+        public int divisionEscritura(string cambio, int id)
         {
-            Nodo<T> newNodo = new Nodo<T>(max, gradoArbol);
-            Nodo<T> newNodo2 = new Nodo<T>(max, gradoArbol);
+            Nodo<T> nodoCambiar = convertirStringNodo(cambio);
+            Nodo<T> padre = new Nodo<T>(max, gradoArbol);
+            Nodo<T> hijoD = new Nodo<T>(max, gradoArbol);
+            Nodo<T> hijoDivisionDoble = new Nodo<T>(max, gradoArbol);
+            int cantidadValores = nodoCambiar.Values.Length;
 
-            
+            if (id != 1)
+            {
+                //ya tiene padre
+                //recuperar padre 
+                string sRaiz = LeerLineaArchivo(nodoCambiar.Padre, nodoCambiar.FixedSizedText, ruta);
+                padre = convertirStringNodo(sRaiz);
+
+                if (padre.CountOfValues < max)
+                {
+                    //puede subirse el valor al padre 
+                    agregarAPadre(padre, nodoCambiar);
+                    definirDerecho(nodoCambiar, hijoD, id+1, padre.Id);
+                    definirIzquierdo(nodoCambiar, id, padre.Id);
+                    id++;
+                    agregarHijos(padre, hijoD.Id);
+                }
+                else
+                {
+                    //se debe hacer dos divisiones, una del nodo y uno de la raiz
+
+                }
+            }
+            else
+            {
+                //cuando aun no tiene padre, primera division
+                //definicion de raiz
+                definirRaiz(nodoCambiar, padre, id);
+                id++;
+                definirDerecho(nodoCambiar, hijoD, id+1, padre.Id);
+                definirIzquierdo(nodoCambiar, id, padre.Id);
+                id++;
+                agregarHijos(padre, nodoCambiar.Id);
+                agregarHijos(padre, hijoD.Id);
+            }
+            return id;
         }
+        private void definirRaiz (Nodo<T> nodoCambiar, Nodo<T> newNodo, int id)
+        {
+            newNodo.Values[0] = nodoCambiar.Values[mitad];
+            newNodo.Id = id;
+            newNodo.Padre = -1;
+            newNodo.CountOfValues++;
+            newNodo.Order = gradoArbol;
+        }
+        private void definirDerecho (Nodo<T> nodoCambiar, Nodo<T> newNodo2, int id, int idPadre)
+        {
+            int cantidadValores = nodoCambiar.Values.Length;
+            int contador = 0;
+            int posicion = 0;
+            for (int i = mitad + 1; i < nodoCambiar.Values.Length; i++)
+            {
+                newNodo2.Values[posicion] = nodoCambiar.Values[i];
+                posicion++;
+                contador++;
+            }
+            newNodo2.Id = id;
+            newNodo2.Padre = idPadre;
+            newNodo2.CountOfValues = cantidadValores - contador;
+        }
+        private void definirIzquierdo (Nodo<T> nodoCambiar, int id, int idPadre)
+        {
+            int cantidadValores = nodoCambiar.Values.Length;
+            int contador2 = 0;
+            for (int i = mitad; i < nodoCambiar.Values.Length; i++)
+            {
+                nodoCambiar.Values[i] = default(T);
+                contador2++;
+            }
+            nodoCambiar.Id = id;
+            nodoCambiar.Padre = idPadre;
+            nodoCambiar.CountOfValues = cantidadValores - contador2;
+        }
+        private void agregarHijos(Nodo<T> nodo, int pos)
+        {
+            for(int i = 0; i<max; i++)
+            {
+                if (nodo.Hijos[i] == null)
+                {
+                    nodo.Hijos[i] = pos;
+                    break;
+                }
+            }
+        }
+        private void agregarAPadre(Nodo<T> padre, Nodo<T> nodoCambiar)
+        {
+            int contador = 0;
+            T aux;
+            for(int i=0; i < max; i++)
+            {
+                if (contador == 0)
+                {
+                    //agregar valor a padre
+                    if (padre.Values[i] == null)
+                    {
+                        padre.Values[i] = nodoCambiar.Values[mitad];
+                    }
+                    contador++;
+                } 
+            }
 
+            //ordenar valores
+            for(int i=0; i<max; i++)
+            {
+                if (padre.Values[i].CompareTo(padre.Values[i + 1])==1)
+                {
+                    aux = padre.Values[i];
+                    padre.Values[i] = padre.Values[i + 1];
+                    padre.Values[i + 1] = aux;
+
+                }
+            }
+        }
         private Nodo<T> convertirStringNodo(String aConvertir)
         {
             Nodo<T> recuperado = new Nodo<T>(max, gradoArbol);
