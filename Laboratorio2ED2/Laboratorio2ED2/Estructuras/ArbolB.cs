@@ -87,6 +87,7 @@ namespace Laboratorio2ED2
             Nodo<T> padre = new Nodo<T>(max, gradoArbol);
             Nodo<T> hijoD = new Nodo<T>(max, gradoArbol);
             Nodo<T> hijoDivisionDoble = new Nodo<T>(max, gradoArbol);
+            Nodo<T> hijoDivisionDobleD = new Nodo<T>(max, gradoArbol);
             int cantidadValores = nodoCambiar.Values.Length;
 
             if (id != 1)
@@ -108,7 +109,18 @@ namespace Laboratorio2ED2
                 else
                 {
                     //se debe hacer dos divisiones, una del nodo y uno de la raiz
+                    agregarAPadre(padre, nodoCambiar);
+                    definirDerecho(nodoCambiar, hijoD, id + 1, padre.Id);
+                    definirIzquierdo(nodoCambiar, id, padre.Id);
+                    id++;
+                    agregarHijos(padre, hijoD.Id);
 
+                    //segunda division 
+                    agregarAPadre(hijoDivisionDoble, padre);
+                    definirDerecho(padre, hijoDivisionDobleD, id + 1, hijoDivisionDoble.Id);
+                    definirIzquierdo(padre, id, hijoDivisionDoble.Id);
+                    id++;
+                    agregarHijos(hijoDivisionDoble, hijoDivisionDobleD.Id);
                 }
             }
             else
