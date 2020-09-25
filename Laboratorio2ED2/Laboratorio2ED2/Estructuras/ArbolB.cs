@@ -228,36 +228,50 @@ namespace Laboratorio2ED2
             throw new NotImplementedException();
         }
 
-        private void EliminarValor(int id, T value)
+        private void EliminarValor(int idPosition, T value)
         {
-            //file.Write(Encoding.UTF8.GetBytes(ToFixedLengthString()), 0, FixedSizedText);
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
 
-            Nodo<T> aux1 = new Nodo<T>(this.max, this.gradoArbol);
-            Nodo<T> aux2 = new Nodo<T>(this.max, this.gradoArbol);
+            string data = LeerLineaArchivo(idPosition, nodoActual.FixedSizedText, ruta);
+            nodoActual = convertirStringNodo(data);
 
-            int position = id;
+            int posicionHijos = 0;
+            bool valorEncontrado = false;
 
-            string data = LeerLineaArchivo(position, aux1.FixedSizedText, ruta);
+            for (int i = 0; i <= gradoArbol; i++)
+            {
+                if (value.CompareTo(nodoActual.Values[i]) == 0)
+                {
+                    CasosEliminacion();
+                    valorEncontrado = true;
+                    break;
+                }
+                else if (value.CompareTo(nodoActual.Values[0]) == -1)//Es menor que la primera posición del arreglo de valores
+                    break;
+                else if (value.CompareTo(nodoActual.Values[i]) == 1)
+                    posicionHijos++;
+            }
 
-
-            
-            //Ir a posicion de raiz o nodo en la recursividad. 
-            //Hacer la lectura de archivo y asignar valores al nodo aux1. 
-            //Evaluear si el valor buscado es el mismo en el campo hijos. 
-            //Si no, evaluear menor o mayor el x numero de veces
-            //Usar el número de validaciones para ir a la posicion del arreglo hijos. 
-            //Recuperar id del nodo hijo al que se movio. 
-
-            //REPETIR RECURCIVIDAD. 
-
-            //Al encontrar el valor evaluar casos de eliminacion. 
-
+            if (!valorEncontrado)
+                EliminarValor(nodoActual.Hijos[posicionHijos], value);
         }
 
-        private string LeerLineaArchivo(int position, int fixedSizedText ,string ruta)
+        private void CasosEliminacion()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Este método recupera el string completo del nodo dentro del archivo de texto. 
+        /// </summary>
+        /// <param name="position">Posición o id al que el cursosr debe moverse para leer en el archivo</param>
+        /// <param name="fixedSizedText">Tamaño formateado predefinido en la clse nodo, respecto al string de cada uno</param>
+        /// <param name="ruta">Ruta en la que se encuentra el archivo</param>
+        /// <returns></returns>
+        private string LeerLineaArchivo(int position, int fixedSizedText, string ruta)
         {
             FileStream file = new FileStream(ruta, FileMode.Open, FileAccess.Read);
-            file.Seek( fixedSizedText * position + encabezadoLength, System.IO.SeekOrigin.Begin);
+            file.Seek(fixedSizedText * position + encabezadoLength, System.IO.SeekOrigin.Begin);
             StreamReader reader = new StreamReader(file);
             string respuesta = reader.ReadLine();
             file.Close();
@@ -271,7 +285,7 @@ namespace Laboratorio2ED2
 
         private int LeerRaizEncabezado()
         {
-           throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
