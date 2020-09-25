@@ -86,18 +86,15 @@ namespace Laboratorio2ED2
             Nodo<T> nodoCambiar = convertirStringNodo(cambio);
             Nodo<T> padre = new Nodo<T>(max, gradoArbol);
             Nodo<T> hijoD = new Nodo<T>(max, gradoArbol);
-            Nodo<T> hijoDivisionDoble = new Nodo<T>(max, gradoArbol);
-            Nodo<T> hijoDivisionDobleD = new Nodo<T>(max, gradoArbol);
-            int cantidadValores = nodoCambiar.Values.Length;
 
-            if (id != 1)
+            if (id > 1)
             {
                 //ya tiene padre
                 //recuperar padre 
                 string sRaiz = LeerLineaArchivo(nodoCambiar.Padre, nodoCambiar.FixedSizedText, ruta);
                 padre = convertirStringNodo(sRaiz);
 
-                if (padre.CountOfValues < max)
+                if (padre.CountOfValues < max-1)
                 {
                     //puede subirse el valor al padre 
                     agregarAPadre(padre, nodoCambiar);
@@ -105,22 +102,36 @@ namespace Laboratorio2ED2
                     definirIzquierdo(nodoCambiar, id, padre.Id);
                     id++;
                     agregarHijos(padre, hijoD.Id);
+                    padre.WriteToFile(path, padre.Id);
+                    nodoCambiar.WriteToFile(path, nodoCambiar.Id);
+                    hijoD.WriteToFile(path, hijoD.Id);
                 }
                 else
                 {
-                    //se debe hacer dos divisiones, una del nodo y uno de la raiz
-                    agregarAPadre(padre, nodoCambiar);
-                    definirDerecho(nodoCambiar, hijoD, id + 1, padre.Id);
-                    definirIzquierdo(nodoCambiar, id, padre.Id);
-                    id++;
-                    agregarHijos(padre, hijoD.Id);
-
-                    //segunda division 
-                    agregarAPadre(hijoDivisionDoble, padre);
-                    definirDerecho(padre, hijoDivisionDobleD, id + 1, hijoDivisionDoble.Id);
-                    definirIzquierdo(padre, id, hijoDivisionDoble.Id);
-                    id++;
-                    agregarHijos(hijoDivisionDoble, hijoDivisionDobleD.Id);
+                    //division doble
+                    if (padre.Padre == -1)
+                    {
+                        definirRaiz(padre, nodoCambiar, 1);
+                        id++;
+                        definirDerecho(nodoCambiar, hijoD, id + 1, padre.Id);
+                        definirIzquierdo(nodoCambiar, id, padre.Id);
+                        id++;
+                        agregarHijos(padre, padre.Id);
+                        agregarHijos(nodoCambiar, nodoCambiar.Id);
+                        agregarHijos(hijoD, hijoD.Id);
+                        padre.WriteToFile(path, padre.Id);
+                        nodoCambiar.WriteToFile(path, nodoCambiar.Id);
+                        hijoD.WriteToFile(path, hijoD.Id);
+                    }
+                    else
+                    {
+                        agregarAPadre(padre, nodoCambiar);
+                        definirDerecho(padre, hijoD, id + 1, padre.Id);
+                        definirIzquierdo(padre, id, padre.Id);
+                        id++;
+                        agregarHijos(padre, hijoD.Id);
+                        divisionEscritura(padre.ToString(), id);
+                    }
                 }
             }
             else
@@ -134,7 +145,11 @@ namespace Laboratorio2ED2
                 id++;
                 agregarHijos(padre, nodoCambiar.Id);
                 agregarHijos(padre, hijoD.Id);
+                padre.WriteToFile(path, padre.Id);
+                nodoCambiar.WriteToFile(path, nodoCambiar.Id);
+                hijoD.WriteToFile(path, hijoD.Id);
             }
+
             return id;
         }
         private void definirRaiz (Nodo<T> nodoCambiar, Nodo<T> newNodo, int id)
@@ -212,6 +227,7 @@ namespace Laboratorio2ED2
 
                 }
             }
+            padre.CountOfValues++;
         }
         private Nodo<T> convertirStringNodo(String aConvertir)
         {
