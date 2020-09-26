@@ -364,7 +364,19 @@ namespace Laboratorio2ED2
                             contadorValoresDerecho++;
                         }
                         Array.Sort(padreActual.Values);
-                        //Podría eliminarse el nodo que se queda  vacío... 
+                        //Correr los hijos
+                        if (hermanoDerecho.Values == default)
+                        {
+                            padreActual.Hijos[posicionHijo + 1] = 0;
+                            for (int i = posicionHijo+1; i <= padreActual.Hijos.Length-1; i++)
+                            {
+                                padreActual.Hijos[i] = padreActual.Hijos[i + 1];
+                                if (padreActual.Hijos[padreActual.Hijos.Length-1] == i)
+                                {
+                                    padreActual.Hijos[padreActual.Hijos.Length - 1] = 0;
+                                }
+                            }
+                        }
                     }
                     //Sobre escribir los tres nodos;
                     FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
