@@ -51,7 +51,6 @@ namespace Laboratorio2ED2
             string raiz = LeerLineaArchivo(1, 1061, ruta);
             insertarEnNodo(raiz, value, idCorrespondiente);
         }
-
         public void insertarEnNodo(string sRaiz, T value, int id)
         {
             if (id != 1)
@@ -77,6 +76,7 @@ namespace Laboratorio2ED2
                         }
                     }
                     raiz = convertirStringNodo(LeerLineaArchivo(contador, raiz.FixedSizedText, ruta));
+                    insertarEnNodo(raiz.ToString(), value, id);
                 }
                 for (int i = 0; i < max; i++)
                 {
