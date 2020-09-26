@@ -220,6 +220,8 @@ namespace Laboratorio2ED2
             }
             return recuperado;
         }
+
+
         public void Eliminar(T value)
         {
             //Ir a encabezado del archivo y recuperar id de raiz. 
@@ -242,7 +244,8 @@ namespace Laboratorio2ED2
             {
                 if (value.CompareTo(nodoActual.Values[i]) == 0)
                 {
-                    CasosEliminacion();
+                    CasosEliminacion(nodoActual, posicionHijos, i);
+                    //Si encuentra el valor, sus hijos son posicionHijos y posicionHijos + 1
                     valorEncontrado = true;
                     break;
                 }
@@ -256,9 +259,101 @@ namespace Laboratorio2ED2
                 EliminarValor(nodoActual.Hijos[posicionHijos], value);
         }
 
-        private void CasosEliminacion()
+        private void CasosEliminacion(Nodo<T> nodoActual, int posicionHijo, int posicionValor)
         {
-            throw new NotImplementedException();
+
+            //1. Si sus dos hijos son vacios, eliminar valor y reordenar. 
+            if (nodoActual.Hijos[posicionHijo] == 0 && nodoActual.Hijos[posicionHijo + 1] == 0)
+            {
+                if (nodoActual.CountOfValues < this.min)
+                {
+                    //Rebalanceo
+                }
+                else
+                {
+                    nodoActual.Values[posicionValor] = default;
+                    Array.Sort(nodoActual.Values);
+
+                    FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
+                    nodoActual.WriteToFile(file, nodoActual.Id);
+                }
+
+            }
+            else if (nodoActual.Hijos[posicionHijo] != 0 || nodoActual.Hijos[posicionHijo + 1] != 0)
+            {
+                nodoActual.Values[posicionValor] = default;
+
+                //Recuperar más a la derecha de la izquierda
+                T newValue = default;
+
+                //Si viene false es por que queda en underflow
+                if (!DeIzquierdaADerecha(nodoActual.Hijos[posicionValor], ref newValue))
+                {
+                    if (!DeDerechaAIzquierda(nodoActual.Hijos[posicionValor + 1], ref newValue))
+                    {
+
+                    }
+                    //si el derecho no queda en underflow
+                }
+                else
+                {
+
+                }
+
+            }
+
+
+
+        }
+
+        private bool DeIzquierdaADerecha(int idHijo, ref T newValue)
+        {
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
+            string data = LeerLineaArchivo(idHijo, nodoActual.FixedSizedText, this.ruta);
+            nodoActual = convertirStringNodo(data);
+
+            if (nodoActual.CountOfValues < this.min)
+                return false;
+            else
+            {
+                if ((nodoActual.Hijos[nodoActual.CountOfValues + 1] == 0))
+                {
+                    T aux = nodoActual.Values[nodoActual.CountOfValues];
+                    nodoActual.Values[nodoActual.CountOfValues] = default;
+
+                    newValue = aux;
+                    return true;
+                }
+                else //Si el ultimo valor del nodo tiene hijo derecho. 
+                {
+                    return DeIzquierdaADerecha(nodoActual.Hijos[nodoActual.CountOfValues + 1], ref newValue);
+                }
+
+            }
+        }
+
+        private bool DeDerechaAIzquierda(int idHijoDer, ref T newValue)
+        {
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
+            string data = LeerLineaArchivo(idHijoDer, nodoActual.FixedSizedText, this.ruta);
+            nodoActual = convertirStringNodo(data);
+            if (nodoActual.CountOfValues < this.min)
+                return false;
+            else
+            {
+                if ((nodoActual.Hijos[0] == 0))
+                {
+                    T aux = nodoActual.Values[0];
+                    nodoActual.Values[0] = default;
+
+                    newValue = aux;
+                    return true;
+                }
+                else //Si el ultimo valor del nodo tiene hijo derecho. 
+                {
+                    return DeIzquierdaADerecha(nodoActual.Hijos[0], ref newValue);
+                }
+            }
         }
 
         /// <summary>
