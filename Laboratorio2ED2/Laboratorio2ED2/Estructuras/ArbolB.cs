@@ -273,7 +273,7 @@ namespace Laboratorio2ED2
                 if (value.CompareTo(nodoActual.Values[i]) == 0)
                 {
                     CasosEliminacion(nodoActual, posicionHijos, i);
-                    //Si encuentra el valor, sus hijos son posicionHijos y posicionHijos + 1
+                   
                     valorEncontrado = true;
                     break;
                 }
@@ -293,9 +293,11 @@ namespace Laboratorio2ED2
             //1. Si sus dos hijos son vacios, eliminar valor y reordenar. 
             if (nodoActual.Hijos[posicionHijo] == 0 && nodoActual.Hijos[posicionHijo + 1] == 0)
             {
-                if (nodoActual.CountOfValues < this.min)
+                if (nodoActual.CountOfValues-1 < this.min)
                 {
                     //Rebalanceo
+                    nodoActual.Values[posicionValor] = default;
+                    Array.Sort(nodoActual.Values);
                 }
                 else
                 {
@@ -307,6 +309,7 @@ namespace Laboratorio2ED2
                 }
 
             }
+            //2. Si tiene algun hijo ir a traer el mayor de la izq o el menor de la der
             else if (nodoActual.Hijos[posicionHijo] != 0 || nodoActual.Hijos[posicionHijo + 1] != 0)
             {
                 nodoActual.Values[posicionValor] = default;
@@ -317,17 +320,24 @@ namespace Laboratorio2ED2
                 //Si viene false es por que queda en underflow
                 if (!DeIzquierdaADerecha(nodoActual.Hijos[posicionValor], ref newValue))
                 {
-                    if (!DeDerechaAIzquierda(nodoActual.Hijos[posicionValor + 1], ref newValue))
+                    if (nodoActual.Hijos[posicionHijo+1] != 0)
                     {
-
+                        if (!DeDerechaAIzquierda(nodoActual.Hijos[posicionValor + 1], ref newValue))
+                        {
+                            //Si ambos quedan en underflow escojer un lado ir hasta ese ultimo y obtener valor de alli. 
+                            //Luego rebalancear alli 
+                            nodoActual.Values[posicionValor] = DeIzquierdaADerechaConUnderFlow(nodoActual.Hijos[posicionValor]);
+                        }
+                        //si el derecho no queda en underflow newValue obtiene el mentor de la derecha. 
+                        nodoActual.Values[posicionValor] = newValue;
                     }
-                    //si el derecho no queda en underflow
+                    //Si no hay hijo derecho recuperar deIzqADerecha aún si queda en underflow
+                    //Mismo método que si ambos quedan en underflow. 
+                    nodoActual.Values[posicionValor] = DeIzquierdaADerechaConUnderFlow(nodoActual.Hijos[posicionValor]);
+                    
                 }
-                else
-                {
-
-                }
-
+                else //Si el izquierdo no queda en underflow newValue obtiene el valor mayor del lado izquierdo. 
+                    nodoActual.Values[posicionValor] = newValue;
             }
 
 
@@ -340,7 +350,7 @@ namespace Laboratorio2ED2
             string data = LeerLineaArchivo(idHijo, nodoActual.FixedSizedText, this.ruta);
             nodoActual = convertirStringNodo(data);
 
-            if (nodoActual.CountOfValues < this.min)
+            if (nodoActual.CountOfValues-1 < this.min)
                 return false;
             else
             {
@@ -360,12 +370,39 @@ namespace Laboratorio2ED2
             }
         }
 
+        private T DeIzquierdaADerechaConUnderFlow(int idHijo)
+        {
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
+            string data = LeerLineaArchivo(idHijo, nodoActual.FixedSizedText, this.ruta);
+            nodoActual = convertirStringNodo(data);
+            
+                if ((nodoActual.Hijos[nodoActual.CountOfValues + 1] == 0))
+                {
+                    T aux = nodoActual.Values[nodoActual.CountOfValues];
+                    nodoActual.Values[nodoActual.CountOfValues] = default;
+
+                    //Queda en underflow y se rebalancea. 
+                    if (nodoActual.CountOfValues - 1 < this.min)
+                    {
+                        //TODO: Rebalanceo de nodo con underflow al subir el mayor de la izquierda
+                    }
+
+                    return aux;
+                }
+                else //Si el ultimo valor del nodo tiene hijo derecho. 
+                {
+                    return DeIzquierdaADerechaConUnderFlow(nodoActual.Hijos[nodoActual.CountOfValues + 1]);
+                }
+
+            
+        }
+
         private bool DeDerechaAIzquierda(int idHijoDer, ref T newValue)
         {
             Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
             string data = LeerLineaArchivo(idHijoDer, nodoActual.FixedSizedText, this.ruta);
             nodoActual = convertirStringNodo(data);
-            if (nodoActual.CountOfValues < this.min)
+            if (nodoActual.CountOfValues-1 < this.min)
                 return false;
             else
             {
@@ -377,12 +414,14 @@ namespace Laboratorio2ED2
                     newValue = aux;
                     return true;
                 }
-                else //Si el ultimo valor del nodo tiene hijo derecho. 
+                else //Si el primer valor del nodo tiene hijo izquierdo. 
                 {
                     return DeIzquierdaADerecha(nodoActual.Hijos[0], ref newValue);
                 }
             }
         }
+
+
 
         /// <summary>
         /// Este método recupera el string completo del nodo dentro del archivo de texto. 
