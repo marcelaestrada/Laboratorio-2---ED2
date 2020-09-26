@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -47,26 +48,48 @@ namespace Laboratorio2ED2
 
         public void Insertar(T value, int idCorrespondiente)
         {
-            string linea = LeerLineaArchivo(2, 1061, ruta);
-            convertirStringNodo(linea);
+            string raiz = LeerLineaArchivo(1, 1061, ruta);
+            insertarEnNodo(raiz, value, idCorrespondiente);
         }
-
-        public void insertarEnNodo(T value, int id)
+        public void insertarEnNodo(string sRaiz, T value, int id)
         {
             if (id != 1)
             {
                 Nodo<T> raiz = new Nodo<T>(max, gradoArbol);
+                int contador = 0;
+
                 //si hay nodo, recuperar raiz
-                String sRaiz = LeerLineaArchivo(1, raiz.FixedSizedText, ruta);
                 raiz = convertirStringNodo(sRaiz);
 
                 //evaluar con los valores si es mayor o menor
-                //buscar hijo dependiendo del resultado anterior
-                //evaluar otra vez , recursividad
-                //al encontrar donde le corresponde, insertar y ver si hay que hacer división
-                //llamar al metodo división o solo insertar y enviar de nuevo al archivo 
-
-
+                while (raiz.Hijos.Length != 0)
+                {
+                    for(int i = 0; i<raiz.Values.Length; i++)
+                    {
+                        if (raiz.Values[i].CompareTo(value) == 1)
+                        {
+                            contador = raiz.Hijos[i];
+                            break;
+                        }else if (raiz.Values[i].CompareTo(value) == -1)
+                        {
+                            contador = raiz.Hijos[i + 1];
+                        }
+                    }
+                    raiz = convertirStringNodo(LeerLineaArchivo(contador, raiz.FixedSizedText, ruta));
+                    insertarEnNodo(raiz.ToString(), value, id);
+                }
+                for (int i = 0; i < max; i++)
+                {
+                    if (raiz.Values[i] == null)
+                    {
+                        raiz.Values[i] = value;
+                        break;
+                    }
+                }
+                if(raiz.Values.Length == max)
+                {
+                    divisionEscritura(raiz.ToString(), id);
+                }
             }
             else
             {
@@ -80,7 +103,6 @@ namespace Laboratorio2ED2
                 nuevoNodo.WriteToFile(path,1);
             }
         }
-
         public int divisionEscritura(string cambio, int id)
         {
             Nodo<T> nodoCambiar = convertirStringNodo(cambio);
@@ -127,7 +149,7 @@ namespace Laboratorio2ED2
                     {
                         agregarAPadre(padre, nodoCambiar);
                         definirDerecho(padre, hijoD, id + 1, padre.Id);
-                        definirIzquierdo(padre, id, padre.Id);
+                        definirIzquierdo(nodoCambiar, id, padre.Id);
                         id++;
                         agregarHijos(padre, hijoD.Id);
                         divisionEscritura(padre.ToString(), id);
@@ -165,11 +187,17 @@ namespace Laboratorio2ED2
             int cantidadValores = nodoCambiar.Values.Length;
             int contador = 0;
             int posicion = 0;
+            int j = 0;
             for (int i = mitad + 1; i < nodoCambiar.Values.Length; i++)
             {
                 newNodo2.Values[posicion] = nodoCambiar.Values[i];
                 posicion++;
                 contador++;
+            }
+            for(int i = mitad+1; i == gradoArbol; i++)
+            {
+                newNodo2.Hijos[j] = nodoCambiar.Hijos[i];
+                j++;
             }
             newNodo2.Id = id;
             newNodo2.Padre = idPadre;
@@ -183,6 +211,10 @@ namespace Laboratorio2ED2
             {
                 nodoCambiar.Values[i] = default(T);
                 contador2++;
+            }
+            for (int i = mitad; i < nodoCambiar.Hijos.Length; i++)
+            {
+                nodoCambiar.Hijos[i] = default(int);
             }
             nodoCambiar.Id = id;
             nodoCambiar.Padre = idPadre;
