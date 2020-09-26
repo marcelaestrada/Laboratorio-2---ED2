@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Laboratorio2ED2
@@ -327,9 +328,51 @@ namespace Laboratorio2ED2
             {
                 if (nodoActual.CountOfValues-1 < this.min)
                 {
-                    //Rebalanceo
+                    //Raíz en común baja y sube mayor o menor a la raiz. 
                     nodoActual.Values[posicionValor] = default;
-                    Array.Sort(nodoActual.Values);
+                    
+                  
+
+                    string data = LeerLineaArchivo(nodoActual.Padre, nodoActual.FixedSizedText, ruta);
+                    Nodo<T> padreActual = convertirStringNodo(data);
+                    T raizBaja = padreActual.Values[posicionHijo];
+                    nodoActual.Values[posicionValor] = raizBaja;
+                    //Subir al padre menor de la derecha. 
+                    string dataHermano = LeerLineaArchivo(padreActual.Hijos[posicionHijo+1], nodoActual.FixedSizedText, ruta);
+                    Nodo<T> hermanoDerecho = convertirStringNodo(dataHermano);
+                    padreActual.Values[posicionHijo] = hermanoDerecho.Values[0];
+                    hermanoDerecho.Values[0] = default;
+                    Array.Sort(hermanoDerecho.Values);
+
+                        //Si el que presta se queda en underFlow unir al nodo actual. 
+                        //Bajar la raiz en común, unir el nodo hijo derecho con nodo actual. 
+                        //Correr u ordenar valores del nodo padre. 
+                    if (hermanoDerecho.CountOfValues < this.min)
+                    {
+                        raizBaja = padreActual.Values[posicionHijo];
+                        padreActual.Values[posicionHijo] = default;
+                        nodoActual.Values[posicionHijo + 1] = raizBaja;
+                        //Agregar todos los valore del herman derecho al izquierdo. 
+                        int contadorValoresDerecho = 0;
+                        for (int i = posicionHijo+2; i < nodoActual.Values.Length; i++)
+                        {
+                            if (hermanoDerecho.Values == default)
+                                break;
+
+                            nodoActual.Values[i] = hermanoDerecho.Values[contadorValoresDerecho];
+                            hermanoDerecho.Values[contadorValoresDerecho] = default;
+                            contadorValoresDerecho++;
+                        }
+                        Array.Sort(padreActual.Values);
+                        //Podría eliminarse el nodo que se queda  vacío... 
+                    }
+                    //Sobre escribir los tres nodos;
+                    FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
+                    nodoActual.WriteToFile(file, nodoActual.Id);
+                    padreActual.WriteToFile(file, padreActual.Id);
+                    hermanoDerecho.WriteToFile(file, hermanoDerecho.Id);
+
+
                 }
                 else
                 {

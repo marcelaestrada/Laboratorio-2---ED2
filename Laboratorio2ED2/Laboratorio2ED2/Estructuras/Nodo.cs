@@ -70,8 +70,10 @@ namespace Laboratorio2ED2
         public string ValuesToString()
         {
             string resultado = "";
-            for (int i = 0; i < Values.Length; i++)
+            
+            for (int i = 0; i <= CountOfValues; i++)
             {
+                if (CountOfValues == 0) break;
                 if (i == Values.Length - 1)
                     resultado += $"{JsonConvert.SerializeObject(Values[i])}\n";
                 else
@@ -87,9 +89,12 @@ namespace Laboratorio2ED2
         public string ToFixedLengthString()
         {
            // string caracteresHijos = (8 * Order).ToString();
-
+           //leftp rp
              return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|" +
                 $"{string.Format("{0,-50}",HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}";
+
+           // string dato = "Hola";
+           // dato.PadLeft(5,);
            // return "";
         }
 
