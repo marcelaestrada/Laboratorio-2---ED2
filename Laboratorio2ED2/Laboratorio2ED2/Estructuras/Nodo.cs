@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.IO;
 
 namespace Laboratorio2ED2
 {
@@ -40,7 +41,7 @@ namespace Laboratorio2ED2
             /* int caracteresValores = 180 * (Order - 1);
              return caracteresValores + 1;*/
 
-            return 1061;
+            return 1026;
 
 
         }
@@ -98,12 +99,15 @@ namespace Laboratorio2ED2
            // return "";
         }
 
-        public void WriteToFile(System.IO.FileStream file, int position)
+        public void WriteToFile(string ruta, int position)
         {
+            //System.IO.FileStream file
             int encabezado = 0;
+            FileStream file = new FileStream(ruta, FileMode.Open, FileAccess.Write);
             file.Seek(position * FixedSizedText + encabezado, System.IO.SeekOrigin.Begin);
-            file.Write(Encoding.UTF8.GetBytes(ToFixedLengthString()), 0, FixedSizedText);
+            file.Write(Encoding.ASCII.GetBytes(ToFixedLengthString()), 0, FixedSizedText);
             file.Flush();
+            file.Close();
         }
     }
 }

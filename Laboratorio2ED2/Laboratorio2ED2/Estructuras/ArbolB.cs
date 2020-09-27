@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Laboratorio2ED2.Estructuras;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -51,17 +52,18 @@ namespace Laboratorio2ED2
 
         public void Insertar(T value, int idCorrespondiente)
         {
-            string raiz = LeerLineaArchivo(1, 1061, ruta);
+            string raiz = LeerLineaArchivo(1, 1026, ruta);
             insertarEnNodo(raiz, value, idCorrespondiente);
         }
         public void insertarEnNodo(string sRaiz, T value, int id)
         {
-            if (id != 1)
-            {
-                Nodo<T> raiz = new Nodo<T>(max, gradoArbol);
-                int contador = 0;
+            Nodo<T> raiz = new Nodo<T>(max, gradoArbol);
+            int contador = 0;
 
-                //si hay nodo, recuperar raiz
+            //si hay nodo, recuperar raiz
+            //raiz = convertirStringNodo(sRaiz);
+            if (sRaiz != null)
+            {
                 raiz = convertirStringNodo(sRaiz);
 
                 //evaluar con los valores si es mayor o menor
@@ -96,14 +98,37 @@ namespace Laboratorio2ED2
             }
             else
             {
-                //no hay ningun nodo creado
-                Nodo<T> nuevoNodo = new Nodo<T>(max, gradoArbol);
-                nuevoNodo.Id = id;
-                nuevoNodo.Padre = -1;
-                nuevoNodo.Values[0] = value;
-                nuevoNodo.Order = gradoArbol; 
-                nuevoNodo.CountOfValues++;
-                nuevoNodo.WriteToFile(path,1);
+                if (id == 1)
+                {
+                    //no hay ningun nodo creado
+                    Nodo<T> nuevoNodo = new Nodo<T>(max, gradoArbol);
+                    nuevoNodo.Id = id;
+                    nuevoNodo.Padre = -1;
+                    nuevoNodo.Values[0] = value;
+                    nuevoNodo.Order = gradoArbol;
+                    nuevoNodo.CountOfValues++;
+                    nuevoNodo.WriteToFile(ruta, 1);
+                }
+                else
+                {
+                    Nodo<T> actual = new Nodo<T>(max, gradoArbol);
+                    actual = convertirStringNodo(LeerLineaArchivo(1, 1061, ruta));
+                    if(actual.Values.Length <= max)
+                    {
+                        for (int i = 0; i < max; i++)
+                        {
+                            if (actual.Values[i] == null)
+                            {
+                                actual.Values[i] = value;
+                                break;
+                            }
+                        }
+                    }
+                    if (actual.Values.Length == max)
+                    {
+                        divisionEscritura(actual.ToString(), id);
+                    }
+                }
             }
         }
         public int divisionEscritura(string cambio, int id)
@@ -127,9 +152,9 @@ namespace Laboratorio2ED2
                     definirIzquierdo(nodoCambiar, id, padre.Id);
                     id++;
                     agregarHijos(padre, hijoD.Id);
-                    padre.WriteToFile(path, padre.Id);
-                    nodoCambiar.WriteToFile(path, nodoCambiar.Id);
-                    hijoD.WriteToFile(path, hijoD.Id);
+                    padre.WriteToFile(ruta, padre.Id);
+                    nodoCambiar.WriteToFile(ruta, nodoCambiar.Id);
+                    hijoD.WriteToFile(ruta, hijoD.Id);
                 }
                 else
                 {
@@ -144,9 +169,9 @@ namespace Laboratorio2ED2
                         agregarHijos(padre, padre.Id);
                         agregarHijos(nodoCambiar, nodoCambiar.Id);
                         agregarHijos(hijoD, hijoD.Id);
-                        padre.WriteToFile(path, padre.Id);
-                        nodoCambiar.WriteToFile(path, nodoCambiar.Id);
-                        hijoD.WriteToFile(path, hijoD.Id);
+                        padre.WriteToFile(ruta, padre.Id);
+                        nodoCambiar.WriteToFile(ruta, nodoCambiar.Id);
+                        hijoD.WriteToFile(ruta, hijoD.Id);
                     }
                     else
                     {
@@ -170,9 +195,9 @@ namespace Laboratorio2ED2
                 id++;
                 agregarHijos(padre, nodoCambiar.Id);
                 agregarHijos(padre, hijoD.Id);
-                padre.WriteToFile(path, padre.Id);
-                nodoCambiar.WriteToFile(path, nodoCambiar.Id);
-                hijoD.WriteToFile(path, hijoD.Id);
+                padre.WriteToFile(ruta, padre.Id);
+                nodoCambiar.WriteToFile(ruta, nodoCambiar.Id);
+                hijoD.WriteToFile(ruta, hijoD.Id);
             }
 
             return id;
@@ -269,7 +294,7 @@ namespace Laboratorio2ED2
             Nodo<T> recuperado = new Nodo<T>(max, gradoArbol);
             string[] datos = aConvertir.Split("|");
             string[] hijosPosiciones = datos[2].Split("/");
-            String[] valuesDatos = datos[3].Split("/");            
+            string[] valuesDatos = datos[3].Split("/");
 
             recuperado.Id = Convert.ToInt32(datos[0]);
             recuperado.Padre = Convert.ToInt32(datos[1]);
@@ -279,7 +304,7 @@ namespace Laboratorio2ED2
             }
             for (int i = 0; i < valuesDatos.Length; i++)
             {
-                recuperado.Values[i] = (T)JsonConvert.DeserializeObject(valuesDatos[i]);
+                recuperado.Values[i] = JsonConvert.DeserializeObject<T>(valuesDatos[i]);
             }
             return recuperado;
         }
@@ -382,9 +407,9 @@ namespace Laboratorio2ED2
                     }
                     //Sobre escribir los tres nodos;
                     FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
-                    nodoActual.WriteToFile(file, nodoActual.Id);
-                    padreActual.WriteToFile(file, padreActual.Id);
-                    hermanoDerecho.WriteToFile(file, hermanoDerecho.Id);
+                    nodoActual.WriteToFile(ruta, nodoActual.Id);
+                    padreActual.WriteToFile(ruta, padreActual.Id);
+                    hermanoDerecho.WriteToFile(ruta, hermanoDerecho.Id);
 
 
                 }
@@ -394,7 +419,7 @@ namespace Laboratorio2ED2
                     Array.Sort(nodoActual.Values);
 
                     FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
-                    nodoActual.WriteToFile(file, nodoActual.Id);
+                    nodoActual.WriteToFile(ruta, nodoActual.Id);
                 }
 
             }

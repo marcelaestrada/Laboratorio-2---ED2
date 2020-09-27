@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Laboratorio2ED2.Estructuras;
 /*using Laboratorio2ED2;
 
 using System.IO;*/
@@ -14,8 +14,9 @@ namespace Laboratorio2ED2
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            ArbolB<int> arbol = new ArbolB<int>(5, @"./ArchivoPeliculas.txt");
-            arbol.Insertar(2, 2);
+            ArbolB<IntModificado> arbol = new ArbolB<IntModificado>(5, @"C:\Users\marce\Desktop\2020\Semestre II 2020\Estructura de datos II\Laboratorio-2---ED2\Laboratorio2ED2\ArchivoPeliculas.txt");
+            arbol.Insertar(new IntModificado() { Number = 2 }, 1);
+            arbol.Insertar(new IntModificado() { Number = 6 }, 2);
 
             /* FileStream file = new FileStream(@"C:\LabEstructurasII\Laboratorio-2---ED2\Laboratorio2ED2\PruebaArbol\FileTest.txt", 
              FileMode.Open, FileAccess.ReadWrite);
