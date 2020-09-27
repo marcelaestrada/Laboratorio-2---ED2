@@ -6,18 +6,19 @@ using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 
 namespace Laboratorio2ED2
 {
     public class ArbolB<T> : iArbol<T> where T : IComparable
     {
-        int gradoArbol;
-        int min;
-        int max;
-        int mitad;
-        int encabezadoLength;
-        string ruta;
-        FileStream path;
+        private int gradoArbol;
+        private int min;
+        private int max;
+        private int mitad;
+        private int encabezadoLength;
+        private string ruta;
+        private FileStream path;
 
         internal ArbolB(int grado, string ruta)
         {
@@ -288,8 +289,8 @@ namespace Laboratorio2ED2
         public void Eliminar(T value)
         {
             //Ir a encabezado del archivo y recuperar id de raiz. 
-            int idRaiz = LeerRaizEncabezado();
-            EliminarValor(idRaiz, value);
+            
+            EliminarValor(1, value);
             throw new NotImplementedException();
         }
 
@@ -366,18 +367,23 @@ namespace Laboratorio2ED2
                             contadorValoresDerecho++;
                         }
                         Array.Sort(padreActual.Values);
-                        //Correr los hijos
-                        if (hermanoDerecho.Values == default)
+                        
+                        //Juntar Hijos
+                        padreActual.Hijos[padreActual.ConteoHijos() - 1] = 0;
+                        int hijosDerecho = 0;
+                        for (int i = nodoActual.ConteoHijos(); i < hermanoDerecho.Hijos.Length; i++)
                         {
-                            padreActual.Hijos[posicionHijo + 1] = 0;
-                            for (int i = posicionHijo+1; i <= padreActual.Hijos.Length-1; i++)
+                            try
                             {
-                                padreActual.Hijos[i] = padreActual.Hijos[i + 1];
-                                if (padreActual.Hijos[padreActual.Hijos.Length-1] == i)
-                                {
-                                    padreActual.Hijos[padreActual.Hijos.Length - 1] = 0;
-                                }
+                                nodoActual.Hijos[i] = nodoActual.Hijos[hijosDerecho];
+                                hijosDerecho++;
                             }
+                            catch (IndexOutOfRangeException a)
+                            {
+
+                                break;
+                            }
+
                         }
                     }
                     //Sobre escribir los tres nodos;
@@ -395,6 +401,7 @@ namespace Laboratorio2ED2
 
                     FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
                     nodoActual.WriteToFile(file, nodoActual.Id);
+                    file.Close();
                 }
 
             }
@@ -427,6 +434,13 @@ namespace Laboratorio2ED2
                 }
                 else //Si el izquierdo no queda en underflow newValue obtiene el valor mayor del lado izquierdo. 
                     nodoActual.Values[posicionValor] = newValue;
+
+                Array.Sort(nodoActual.Values);
+
+                FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
+                nodoActual.WriteToFile(file, nodoActual.Id);
+                file.Close();
+
             }
 
 
@@ -447,6 +461,7 @@ namespace Laboratorio2ED2
                 {
                     T aux = nodoActual.Values[nodoActual.CountOfValues];
                     nodoActual.Values[nodoActual.CountOfValues] = default;
+                    nodoActual.CountOfValues--;
 
                     newValue = aux;
                     return true;
@@ -471,16 +486,107 @@ namespace Laboratorio2ED2
                     nodoActual.Values[nodoActual.CountOfValues] = default;
 
                     //Queda en underflow y se rebalancea. 
-                    if (nodoActual.CountOfValues - 1 < this.min)
+                    if (nodoActual.CountOfValues < this.min)
                     {
-                        //TODO: Rebalanceo de nodo con underflow al subir el mayor de la izquierda
+                   
+
+                    //1. Pedir prestado a su  hermano izquierdo. 
+
+                    Nodo<T> nodoPadre = new Nodo<T>(this.max, this.gradoArbol);
+                    string dataPadre = LeerLineaArchivo(nodoActual.Padre, nodoPadre.FixedSizedText, this.ruta);
+                    nodoActual = convertirStringNodo(dataPadre);
+
+                    int idHijoIzquierdo = 0;
+                    int pos;
+                    //Encontrar la pos del nodo actual en el arreglo de hijos del nodo padre para instansiar el hermsno izquierdo. 
+                    for ( pos = 0; pos < nodoPadre.Hijos.Length; pos++)
+                    {
+                        if (nodoActual.Id == nodoPadre.Hijos[pos])
+                        {
+                            idHijoIzquierdo = nodoPadre.Hijos[pos - 1];
+                            break;
+
+                        }
                     }
+
+
+                    //instancia del nodo hermano izquierdo de nodoActual. 
+                    Nodo<T> nodoHermanoIzquierdo = new Nodo<T>(this.max, this.gradoArbol);
+                    string dataIzquierdo = LeerLineaArchivo(idHijoIzquierdo, nodoHermanoIzquierdo.FixedSizedText, this.ruta);
+                    nodoActual = convertirStringNodo(dataIzquierdo);
+
+                    if (nodoHermanoIzquierdo.CountOfValues - 1 < this.min)
+                    {
+                        //unir con el hermano izq
+                        // pos -1 es la poscicion de la raíz en comun
+                        nodoHermanoIzquierdo.Values[nodoHermanoIzquierdo.CountOfValues] = nodoPadre.Values[pos - 1];
+                        nodoHermanoIzquierdo.CountOfValues++;
+                        nodoPadre.Values[pos - 1] = default;
+                        nodoPadre.CountOfValues--;
+                        //juntar valore
+
+                        for (int i = 0; i < nodoActual.CountOfValues; i++)
+                        {
+                            nodoHermanoIzquierdo.Values[nodoHermanoIzquierdo.CountOfValues + i] = nodoActual.Values[i];
+                            nodoHermanoIzquierdo.CountOfValues++;
+                            nodoActual.Values[i] = default;
+                            nodoActual.CountOfValues--;
+
+                        }
+                       
+                       //Juntar Hijos
+                            nodoPadre.Hijos[nodoPadre.ConteoHijos() - 1] = 0;
+                            int hijosDerecho = 0;
+                            for (int i = nodoHermanoIzquierdo.ConteoHijos(); i < nodoHermanoIzquierdo.Hijos.Length; i++)
+                            {
+                                try
+                                {
+                                    nodoHermanoIzquierdo.Hijos[i] = nodoActual.Hijos[hijosDerecho];
+                                    hijosDerecho++;
+                                }
+                                catch (IndexOutOfRangeException a)
+                                {
+
+                                    break;
+                                }
+                               
+                            }
+
+
+                        FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
+                        nodoActual.WriteToFile(file, nodoActual.Id);
+                        nodoHermanoIzquierdo.WriteToFile(file, nodoHermanoIzquierdo.Id);
+                        nodoPadre.WriteToFile(file, nodoPadre.Id);
+                        file.Close();
+                    }
+                    else
+                    {
+                        
+
+                        nodoActual.Values[nodoActual.CountOfValues] = nodoPadre.Values[nodoPadre.CountOfValues];
+                        nodoActual.CountOfValues++;
+                        nodoPadre.Values[nodoPadre.CountOfValues] = nodoHermanoIzquierdo.Values[nodoHermanoIzquierdo.CountOfValues];
+                        nodoHermanoIzquierdo.Values[nodoHermanoIzquierdo.CountOfValues] = default;
+                        nodoHermanoIzquierdo.CountOfValues--;
+
+                        Array.Sort(nodoActual.Values);
+
+                        FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
+                        nodoActual.WriteToFile(file, nodoActual.Id);
+                        nodoHermanoIzquierdo.WriteToFile(file, nodoHermanoIzquierdo.Id);
+                        nodoPadre.WriteToFile(file, nodoPadre.Id);
+                        file.Close();
+
+
+                    }
+
+                }
 
                     return aux;
                 }
                 else //Si el ultimo valor del nodo tiene hijo derecho. 
                 {
-                    return DeIzquierdaADerechaConUnderFlow(nodoActual.Hijos[nodoActual.CountOfValues + 1]);
+                    return DeIzquierdaADerechaConUnderFlow(nodoActual.Hijos[nodoActual.CountOfValues + 1] );
                 }
 
             
@@ -499,6 +605,7 @@ namespace Laboratorio2ED2
                 {
                     T aux = nodoActual.Values[0];
                     nodoActual.Values[0] = default;
+                    nodoActual.CountOfValues--;
 
                     newValue = aux;
                     return true;
@@ -534,9 +641,8 @@ namespace Laboratorio2ED2
             throw new NotImplementedException();
         }
 
-        private int LeerRaizEncabezado()
-        {
-            throw new NotImplementedException();
-        }
+       
+
+      
     }
 }
