@@ -27,6 +27,8 @@ namespace Laboratorio2ED2
             //this.ruta = @"c:\ArchivoPeliculas.txt";
 
             path = File.Create(this.ruta);
+            path.Close();
+            
             gradoArbol = grado;
             //valores minimos
             min = (grado - 1) / 2;
