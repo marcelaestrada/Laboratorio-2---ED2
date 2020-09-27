@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+
 
 namespace Laboratorio2ED2
 {
@@ -27,11 +29,23 @@ namespace Laboratorio2ED2
             Hijos = new int[order];
             CountOfValues = 0;
             Order = order;
-            
+
         }
 
         public int FixedSizedText => FixedSize();
 
+        public int ConteoHijos()
+        {
+            int count = 0;
+            for (int i = 0; i < Hijos.Length; i++)
+            {
+                if (Hijos[i] != 0)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
 
         // El valaor del size está a discusión. 
         private int FixedSize()
@@ -71,7 +85,7 @@ namespace Laboratorio2ED2
         public string ValuesToString()
         {
             string resultado = "";
-            
+
             for (int i = 0; i <= CountOfValues; i++)
             {
                 if (CountOfValues == 0) break;
@@ -89,14 +103,14 @@ namespace Laboratorio2ED2
 
         public string ToFixedLengthString()
         {
-           // string caracteresHijos = (8 * Order).ToString();
-           //leftp rp
-             return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|" +
-                $"{string.Format("{0,-50}",HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}";
+            // string caracteresHijos = (8 * Order).ToString();
+            //leftp rp
+            return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|" +
+               $"{string.Format("{0,-50}", HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}";
 
-           // string dato = "Hola";
-           // dato.PadLeft(5,);
-           // return "";
+            // string dato = "Hola";
+            // dato.PadLeft(5,);
+            // return "";
         }
 
         public void WriteToFile(string ruta, int position)
@@ -109,5 +123,7 @@ namespace Laboratorio2ED2
             file.Flush();
             file.Close();
         }
+
+
     }
 }
