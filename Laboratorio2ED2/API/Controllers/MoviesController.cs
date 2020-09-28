@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.Helpers;
 using API.Models;
+using Laboratorio2ED2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -13,66 +14,40 @@ namespace API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
+        public int id = 1;
+        public static int gradoA = 0;
+        public ArbolB<Pelicula> arbolPeliculas = new ArbolB<Pelicula>(gradoA, @".\ArchivoPeliculas.txt");
 
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-         DELETE
-            ● Recibe un id en la ruta (/{id})
-            ● Elimina dicho elemento
-            ● Devuelve OK si no hubo error
-            ● Devuelve NotFound si el Id no existe
-            ● Devuelve InternalServerError si hubo error
-         */
-        //api/movies/{id}
-        [HttpDelete("{id}")]
-        public ActionResult DeleteElement(string id) 
+        // POST: api/<movie>
+        [HttpPost]
+        public int CrearArbol([FromBody] object grado)
         {
-           
+            Orden gradoArbol = JsonConvert.DeserializeObject<Orden>(grado.ToString());
+            gradoA = gradoArbol.orden;
+            return gradoA;
+        }
+
+        //api/movies/populate
+        [HttpPost("populate")]
+        public async Task<ActionResult> Post([FromBody] object peliculas)
+        {
+            List<Pelicula> dataSet = JsonConvert.DeserializeObject<List<Pelicula>>(peliculas.ToString());
+
             try
             {
-                Storage.Instance.arbol.Eliminar(id);
+                foreach (var item in dataSet)
+                {
+                    id = arbolPeliculas.Insertar(item, id);
+                }
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
                 return StatusCode(500);
             }
-            
+
+
         }
-        
-
-
-
-
-
-
     }
 }

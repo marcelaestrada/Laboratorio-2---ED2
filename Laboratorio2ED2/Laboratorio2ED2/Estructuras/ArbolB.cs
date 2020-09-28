@@ -21,6 +21,7 @@ namespace Laboratorio2ED2
         private string ruta;
         private FileStream path;
 
+
         public ArbolB(int grado, string ruta)
         {
             this.ruta = ruta;
@@ -51,12 +52,14 @@ namespace Laboratorio2ED2
             }
         }
 
-        public void Insertar(T value, int idCorrespondiente)
+        public int Insertar(T value, int idCorrespondiente)
         {
+            int id = 0;
             string raiz = LeerLineaArchivo(1, 1026, ruta);
-            insertarEnNodo(raiz, value, idCorrespondiente);
+            id = insertarEnNodo(raiz, value, idCorrespondiente);
+            return id;
         }
-        public void insertarEnNodo(string sRaiz, T value, int id)
+        public int insertarEnNodo(string sRaiz, T value, int id)
         {
             Nodo<T> raiz = new Nodo<T>(max, gradoArbol);
             int contador = 0;
@@ -147,6 +150,7 @@ namespace Laboratorio2ED2
                     }
                 }
             }
+            return id;
         }
         public int divisionEscritura(string cambio, int id)
         {
