@@ -315,11 +315,11 @@ namespace Laboratorio2ED2
             string[] datos = new string[5];
             datos = aConvertir.Split("|");
             string[] hijosPosiciones = datos[2].Split("/");
-            string[] valuesDatos = datos[3].Split("/");
+            string[] valuesDatos = datos[4].Split("/");
 
             recuperado.Id = Convert.ToInt32(datos[0]);
             recuperado.Padre = Convert.ToInt32(datos[1]);
-            recuperado.CountOfValues = Convert.ToInt32(datos[4]);
+            recuperado.CountOfValues = Convert.ToInt32(datos[3]);
             for(int i = 0; i < hijosPosiciones.Length; i++)
             {
                 recuperado.Hijos[i] = Convert.ToInt32(hijosPosiciones[i]);
