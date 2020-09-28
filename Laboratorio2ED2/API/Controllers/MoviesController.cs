@@ -2,13 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-<<<<<<< HEAD
 using API.Models;
 using Laboratorio2ED2;
-=======
-using API.Helpers;
-using API.Models;
->>>>>>> 0b54f33d78aa300f49fe6178efe60b45e7edcd97
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,94 +14,40 @@ namespace API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-<<<<<<< HEAD
-        int id = 1;
-        ArbolB<Pelicula> arbolPeliculas = new ArbolB<Pelicula>()
+        public int id = 1;
+        public static int gradoA = 0;
+        public ArbolB<Pelicula> arbolPeliculas = new ArbolB<Pelicula>(gradoA, @".\ArchivoPeliculas.txt");
+
+        // POST: api/<movie>
+        [HttpPost]
+        public int CrearArbol([FromBody] object grado)
+        {
+            Orden gradoArbol = JsonConvert.DeserializeObject<Orden>(grado.ToString());
+            gradoA = gradoArbol.orden;
+            return gradoA;
+        }
+
         //api/movies/populate
         [HttpPost("populate")]
         public async Task<ActionResult> Post([FromBody] object peliculas)
         {
-            List<Pelicula> dataSet = JsonConvert.DeserializeObject<List<Pelicula>>(content);
+            List<Pelicula> dataSet = JsonConvert.DeserializeObject<List<Pelicula>>(peliculas.ToString());
 
             try
             {
                 foreach (var item in dataSet)
                 {
-
-                    arbol.Insert(item);
-
+                    id = arbolPeliculas.Insertar(item, id);
                 }
                 return Ok();
             }
             catch (Exception e)
-=======
-
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-         DELETE
-            ● Recibe un id en la ruta (/{id})
-            ● Elimina dicho elemento
-            ● Devuelve OK si no hubo error
-            ● Devuelve NotFound si el Id no existe
-            ● Devuelve InternalServerError si hubo error
-         */
-        //api/movies/{id}
-        [HttpDelete("{id}")]
-        public ActionResult DeleteElement(string id) 
-        {
-           
-            try
-            {
-                Storage.Instance.arbol.Eliminar(id);
-                return Ok();
-            }
-            catch (Exception)
->>>>>>> 0b54f33d78aa300f49fe6178efe60b45e7edcd97
             {
 
                 return StatusCode(500);
             }
-<<<<<<< HEAD
 
 
         }
-=======
-            
-        }
-        
-
-
-
-
-
-
->>>>>>> 0b54f33d78aa300f49fe6178efe60b45e7edcd97
     }
 }
