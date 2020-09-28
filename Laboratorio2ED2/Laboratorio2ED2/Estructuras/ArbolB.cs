@@ -313,10 +313,9 @@ namespace Laboratorio2ED2
 
         public void Eliminar(T value)
         {
-            //Ir a encabezado del archivo y recuperar id de raiz. 
             
             EliminarValor(1, value);
-            throw new NotImplementedException();
+      
         }
 
         private void EliminarValor(int idPosition, T value)
