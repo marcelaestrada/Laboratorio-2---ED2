@@ -24,7 +24,8 @@ namespace API.Helpers
         }
 
 
-        public ArbolB<Pelicula> arbol;
-        public int orden;
+        public int id = 1;
+        public int gradoA = 0;
+        public ArbolB<Pelicula> arbolPeliculas;
     }
 }

@@ -15,17 +15,47 @@ namespace API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        public int id = 1;
-        public static int gradoA = 0;
-        public ArbolB<Pelicula> arbolPeliculas = new ArbolB<Pelicula>(gradoA, @".\ArchivoPeliculas.txt");
+       
+
+        [HttpGet("{transversal}")]
+        public string GetRecorrido(string transversal)
+        {
+            List<Pelicula> listaPeliculas;
+            string jsonPeliculas;
+
+            switch (transversal)
+            {
+                case "inorden":
+                    listaPeliculas = Storage.Instance.arbolPeliculas.InOrder();
+                    jsonPeliculas = JsonConvert.SerializeObject(listaPeliculas);
+                    return jsonPeliculas;
+
+                case "preorden":
+                   // listaPeliculas = Storage.Instance.arbolPeliculas.PreOrder();
+                   // jsonPeliculas = JsonConvert.SerializeObject(listaPeliculas);
+                    //return jsonPeliculas;
+
+                case "postorden":
+                    listaPeliculas = Storage.Instance.arbolPeliculas.PostOrder();
+                    jsonPeliculas = JsonConvert.SerializeObject(listaPeliculas);
+                    return jsonPeliculas;
+
+                default:
+                    return "";
+            }
+        }
+
+
+
 
         // POST: api/<movie>
         [HttpPost]
         public int CrearArbol([FromBody] object grado)
         {
             Orden gradoArbol = JsonConvert.DeserializeObject<Orden>(grado.ToString());
-            gradoA = gradoArbol.orden;
-            return gradoA;
+            Storage.Instance.gradoA = gradoArbol.orden;
+            Storage.Instance.arbolPeliculas = new ArbolB<Pelicula>(Storage.Instance.gradoA, @".\ArchivoPeliculas.txt");
+            return Storage.Instance.gradoA;
         }
 
         //api/movies/populate
@@ -38,7 +68,7 @@ namespace API.Controllers
             {
                 foreach (var item in dataSet)
                 {
-                    id = arbolPeliculas.Insertar(item, id);
+                    Storage.Instance.id = Storage.Instance.arbolPeliculas.Insertar(item, Storage.Instance.id);
                 }
                 return Ok();
             }
@@ -60,7 +90,7 @@ namespace API.Controllers
 
             try
             {
-                if (!Storage.Instance.arbol.Eliminar(id))
+                if (!Storage.Instance.arbolPeliculas.Eliminar(id))
                 {
                     return NotFound();
 
