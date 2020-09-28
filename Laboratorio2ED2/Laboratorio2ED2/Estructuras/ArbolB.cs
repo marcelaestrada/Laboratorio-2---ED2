@@ -51,7 +51,6 @@ namespace Laboratorio2ED2
                 mitad--;
             }
         }
-
         public int Insertar(T value, int idCorrespondiente)
         {
             int id = 0;
@@ -330,15 +329,12 @@ namespace Laboratorio2ED2
             }
             return recuperado;
         }
-
-
         public bool Eliminar(string value)
         {
             
            return EliminarValor(1, value);
       
         }
-
         private bool EliminarValor(int idPosition, string value)
         {
             Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
@@ -373,7 +369,6 @@ namespace Laboratorio2ED2
 
             
         }
-
         private void CasosEliminacion(Nodo<T> nodoActual, int posicionHijo, int posicionValor)
         {
 
@@ -496,7 +491,6 @@ namespace Laboratorio2ED2
 
 
         }
-
         private bool DeIzquierdaADerecha(int idHijo, ref T newValue)
         {
             Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
@@ -523,7 +517,6 @@ namespace Laboratorio2ED2
 
             }
         }
-
         private T DeIzquierdaADerechaConUnderFlow(int idHijo)
         {
             Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
@@ -641,7 +634,6 @@ namespace Laboratorio2ED2
 
             
         }
-
         private bool DeDerechaAIzquierda(int idHijoDer, ref T newValue)
         {
             Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
@@ -685,18 +677,10 @@ namespace Laboratorio2ED2
             file.Close();
             return respuesta;
         }
-
-
-
-
-
         public T Buscar(T value)
         {
             throw new NotImplementedException();
         }
-
-
-
         public List<T> InOrder()
         {
             List<T> listaAux = new List<T>();
@@ -735,9 +719,6 @@ namespace Laboratorio2ED2
             }
 
         }
-
-
-
         public List<T> PostOrder()
         {
             List<T> listaAux = new List<T>();
@@ -755,7 +736,7 @@ namespace Laboratorio2ED2
 
 
             int i;
-            for (i = 0; i < 5; i++)
+            for (i = 0; i < nodoActual.Hijos.Length; i++)
             {
                 Nodo<T> nodoHijo = new Nodo<T>(this.max, this.gradoArbol);
                 string dataNodoHijo = LeerLineaArchivo(nodoActual.Hijos[i], nodoHijo.FixedSizedText, this.ruta);
@@ -771,7 +752,6 @@ namespace Laboratorio2ED2
                 listaPost.Add(item);
             }
         }
-
         public List<T> PreOrder()
         {
             List<T> listaAux = new List<T>();
