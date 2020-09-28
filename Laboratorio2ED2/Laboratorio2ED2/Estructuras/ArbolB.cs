@@ -128,6 +128,7 @@ namespace Laboratorio2ED2
                     nuevoNodo.Order = gradoArbol;
                     nuevoNodo.CountOfValues++;
                     nuevoNodo.WriteToFile(ruta, 1);
+                    id++;
                 }
                 else
                 {
