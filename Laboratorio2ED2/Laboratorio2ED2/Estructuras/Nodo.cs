@@ -55,7 +55,7 @@ namespace Laboratorio2ED2
             /* int caracteresValores = 180 * (Order - 1);
              return caracteresValores + 1;*/
 
-            return 1030;
+            return 1025;
 
 
         }
