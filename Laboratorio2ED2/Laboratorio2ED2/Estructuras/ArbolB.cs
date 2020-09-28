@@ -327,14 +327,14 @@ namespace Laboratorio2ED2
         }
 
 
-        public void Eliminar(T value)
+        public void Eliminar(string value)
         {
             
             EliminarValor(1, value);
       
         }
 
-        private void EliminarValor(int idPosition, T value)
+        private void EliminarValor(int idPosition, string value)
         {
             Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
 
@@ -346,16 +346,17 @@ namespace Laboratorio2ED2
 
             for (int i = 0; i <= gradoArbol; i++)
             {
-                if (value.CompareTo(nodoActual.Values[i]) == 0)
+                
+                if (nodoActual.Values[i].CompareTo(value) == 0)
                 {
                     CasosEliminacion(nodoActual, posicionHijos, i);
                    
                     valorEncontrado = true;
                     break;
                 }
-                else if (value.CompareTo(nodoActual.Values[0]) == -1)//Es menor que la primera posición del arreglo de valores
+                else if (nodoActual.Values[0].CompareTo(value) == -1)//Es menor que la primera posición del arreglo de valores
                     break;
-                else if (value.CompareTo(nodoActual.Values[i]) == 1)
+                else if (nodoActual.Values[i].CompareTo(value) == 1)
                     posicionHijos++;
             }
 
@@ -674,6 +675,10 @@ namespace Laboratorio2ED2
             file.Close();
             return respuesta;
         }
+
+
+
+
 
         public T Buscar(T value)
         {
