@@ -773,7 +773,34 @@ namespace Laboratorio2ED2
             }
         }
 
+        public List<T> PreOrder()
+        {
+            List<T> listaAux = new List<T>();
+            ValuesPreOrder(1, listaAux);
+            return listaAux;
+        }
+        private void ValuesPreOrder(int idNodoActual, List<T> listaPre)
+        {
 
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
+            string dataNodoActual = LeerLineaArchivo(idNodoActual, nodoActual.FixedSizedText, this.ruta);
+            nodoActual = convertirStringNodo(dataNodoActual);
 
+            foreach(var item in nodoActual.Values)
+            {
+                listaPre.Add(item);
+            }
+            if (nodoActual.Hijos.Length != null)
+            {
+                for(int i = 0; i < nodoActual.Hijos.Length; i++)
+                {
+                    Nodo<T> nodoHijo = new Nodo<T>(this.max, this.gradoArbol);
+                    string dataNodoHijo = LeerLineaArchivo(nodoActual.Hijos[i], nodoHijo.FixedSizedText, this.ruta);
+                    nodoHijo = convertirStringNodo(dataNodoHijo);
+                    ValuesPreOrder(nodoHijo.Id, listaPre);
+                }
+            }
+
+        }
     }
 }
