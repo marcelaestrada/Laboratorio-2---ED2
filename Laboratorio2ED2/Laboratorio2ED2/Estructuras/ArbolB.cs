@@ -93,7 +93,7 @@ namespace Laboratorio2ED2
                         }
                     }
                     raiz = convertirStringNodo(LeerLineaArchivo(contador, raiz.FixedSizedText, ruta));
-                    insertarEnNodo(raiz.ToString(), value, id);
+                    insertarEnNodo(raiz.ToFixedLengthString(), value, id);
                 }
                 for (int i = 0; i < max; i++)
                 {
@@ -113,7 +113,7 @@ namespace Laboratorio2ED2
                 }
                 if (raiz.Values.Length == max)
                 {
-                    divisionEscritura(raiz.ToString(), id);
+                    divisionEscritura(raiz.ToFixedLengthString(), id);
                 }
             }
             else
@@ -146,7 +146,7 @@ namespace Laboratorio2ED2
                     }
                     if (actual.Values.Length == max)
                     {
-                        divisionEscritura(actual.ToString(), id);
+                        divisionEscritura(actual.ToFixedLengthString(), id);
                     }
                 }
             }
@@ -201,7 +201,7 @@ namespace Laboratorio2ED2
                         definirIzquierdo(nodoCambiar, id, padre.Id);
                         id++;
                         agregarHijos(padre, hijoD.Id);
-                        divisionEscritura(padre.ToString(), id);
+                        divisionEscritura(padre.ToFixedLengthString(), id);
                     }
                 }
             }
@@ -313,7 +313,8 @@ namespace Laboratorio2ED2
         private Nodo<T> convertirStringNodo(String aConvertir)
         {
             Nodo<T> recuperado = new Nodo<T>(max, gradoArbol);
-            string[] datos = aConvertir.Split("|");
+            string[] datos = new string[5];
+            datos = aConvertir.Split("|");
             string[] hijosPosiciones = datos[2].Split("/");
             string[] valuesDatos = datos[3].Split("/");
 
@@ -679,7 +680,7 @@ namespace Laboratorio2ED2
         private string LeerLineaArchivo(int position, int fixedSizedText, string ruta)
         {
             FileStream file = new FileStream(ruta, FileMode.Open, FileAccess.Read);
-            file.Seek(fixedSizedText * position + encabezadoLength, System.IO.SeekOrigin.Begin);
+            file.Seek(fixedSizedText * position, System.IO.SeekOrigin.Begin);
             StreamReader reader = new StreamReader(file);
             string respuesta = reader.ReadLine();
             file.Close();

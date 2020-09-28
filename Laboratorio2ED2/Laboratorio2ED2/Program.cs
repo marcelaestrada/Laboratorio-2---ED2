@@ -14,7 +14,7 @@ namespace Laboratorio2ED2
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            ArbolB<IntModificado> arbol = new ArbolB<IntModificado>(5, @"C:\Users\marce\Desktop\2020\Semestre II 2020\Estructura de datos II\Laboratorio-2---ED2\Laboratorio2ED2\ArchivoPeliculas.txt");
+            ArbolB<IntModificado> arbol = new ArbolB<IntModificado>(5, @"ArchivoPeliculas.txt");
             arbol.Insertar(new IntModificado() { Number = 2 }, 1);
             arbol.Insertar(new IntModificado() { Number = 6 }, 2);
 
