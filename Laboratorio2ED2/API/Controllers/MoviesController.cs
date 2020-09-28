@@ -52,14 +52,7 @@ namespace API.Controllers
         }
 
 
-        /*
-         DELETE
-            ● Recibe un id en la ruta (/{id})
-            ● Elimina dicho elemento
-            ● Devuelve OK si no hubo error
-            ● Devuelve NotFound si el Id no existe
-            ● Devuelve InternalServerError si hubo error
-         */
+      
         //api/movies/{id}
         [HttpDelete("{id}")]
         public ActionResult DeleteElement(string id)
@@ -67,12 +60,12 @@ namespace API.Controllers
 
             try
             {
-                if (Storage.Instance.arbol.Eliminar(id))
+                if (!Storage.Instance.arbol.Eliminar(id))
                 {
-                   
-                    return Ok();
+                    return NotFound();
+
                 }
-                else return NotFound();
+                else return Ok();
 
             }
             catch (Exception)

@@ -695,8 +695,50 @@ namespace Laboratorio2ED2
             throw new NotImplementedException();
         }
 
-       
 
-      
+
+        public List<T> InOrder()
+        {
+            List<T> listaAux = new List<T>();
+           
+                ValuesInOrder(1, listaAux);
+           
+            return listaAux;
+
+        }
+        private void ValuesInOrder(int idNodoActual, List<T> listaAux)
+        {
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
+            string dataNodoActual = LeerLineaArchivo(idNodoActual, nodoActual.FixedSizedText, this.ruta);
+            nodoActual = convertirStringNodo(dataNodoActual);
+            int i;
+            for (i = 0; i < this.max; i++)
+            {
+                Nodo<T> nodoHijo = new Nodo<T>(this.max, this.gradoArbol);
+                string dataNodoHijo = LeerLineaArchivo(nodoActual.Hijos[i], nodoHijo.FixedSizedText, this.ruta);
+                nodoHijo = convertirStringNodo(dataNodoHijo);
+
+                if (nodoHijo.Values == null)
+                    listaAux.Add(nodoActual.Values[i]);
+                else
+                    ValuesInOrder(nodoHijo.Id, listaAux);
+            }
+
+            if (i == this.max - 1)
+            {
+                Nodo<T> nodoHijo = new Nodo<T>(this.max, this.gradoArbol);
+                string dataNodoHijo = LeerLineaArchivo(nodoActual.Hijos[this.max], nodoHijo.FixedSizedText, this.ruta);
+                nodoHijo = convertirStringNodo(dataNodoHijo);
+
+                if (nodoHijo.Values != null)
+                    listaAux.Add(nodoActual.Values[this.max]);
+            }
+
+        }
+
+
+
+
+
     }
 }
