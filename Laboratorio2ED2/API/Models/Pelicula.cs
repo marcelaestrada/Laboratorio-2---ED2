@@ -15,12 +15,16 @@ namespace API.Models
         public double RottenTomatoesRating { get; set; }
         public string Title { get; set; }
 
-        public string Id { get; set; }
+        private string Id;
 
-        public Pelicula()
+        public string id
         {
-            Id = Title + AñoPelicula();
+            get { return Title + AñoPelicula(); }
+            //set { Id = value; }
         }
+
+
+       
 
         private string AñoPelicula()
         {
