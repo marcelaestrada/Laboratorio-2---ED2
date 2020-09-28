@@ -55,7 +55,7 @@ namespace Laboratorio2ED2
             /* int caracteresValores = 180 * (Order - 1);
              return caracteresValores + 1;*/
 
-            return 1026;
+            return 1030;
 
 
         }
@@ -90,7 +90,7 @@ namespace Laboratorio2ED2
             {
                 if (CountOfValues == 0) break;
                 if (i == Values.Length - 1)
-                    resultado += $"{JsonConvert.SerializeObject(Values[i])}\n";
+                    resultado += $"{JsonConvert.SerializeObject(Values[i])}";
                 else
                     resultado += $"{JsonConvert.SerializeObject(Values[i])}/";
             }
@@ -106,7 +106,7 @@ namespace Laboratorio2ED2
             // string caracteresHijos = (8 * Order).ToString();
             //leftp rp
             return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|" +
-               $"{string.Format("{0,-50}", HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}";
+               $"{string.Format("{0,-50}", HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}|{string.Format("{0,2}", CountOfValues)}\n";
 
             // string dato = "Hola";
             // dato.PadLeft(5,);

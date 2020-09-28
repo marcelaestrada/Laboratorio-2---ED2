@@ -315,6 +315,7 @@ namespace Laboratorio2ED2
 
             recuperado.Id = Convert.ToInt32(datos[0]);
             recuperado.Padre = Convert.ToInt32(datos[1]);
+            recuperado.CountOfValues = Convert.ToInt32(datos[4]);
             for(int i = 0; i < hijosPosiciones.Length; i++)
             {
                 recuperado.Hijos[i] = Convert.ToInt32(hijosPosiciones[i]);
