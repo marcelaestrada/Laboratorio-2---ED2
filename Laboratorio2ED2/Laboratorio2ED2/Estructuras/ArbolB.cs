@@ -738,6 +738,40 @@ namespace Laboratorio2ED2
 
 
 
+        public List<T> PostOrder()
+        {
+            List<T> listaAux = new List<T>();
+           
+                ValuesPostOrder(1, listaAux);
+            
+            return listaAux;
+        }
+        private void ValuesPostOrder(int idNodoActual, List<T> listaPost)
+        {
+
+            Nodo<T> nodoActual = new Nodo<T>(this.max, this.gradoArbol);
+            string dataNodoActual = LeerLineaArchivo(idNodoActual, nodoActual.FixedSizedText, this.ruta);
+            nodoActual = convertirStringNodo(dataNodoActual);
+
+
+            int i;
+            for (i = 0; i < 5; i++)
+            {
+                Nodo<T> nodoHijo = new Nodo<T>(this.max, this.gradoArbol);
+                string dataNodoHijo = LeerLineaArchivo(nodoActual.Hijos[i], nodoHijo.FixedSizedText, this.ruta);
+                nodoHijo = convertirStringNodo(dataNodoHijo);
+
+                if (nodoHijo.Values != null)
+                {
+                    ValuesPostOrder(nodoHijo.Id, listaPost);
+                }
+            }
+            foreach (var item in nodoActual.Values)
+            {
+                listaPost.Add(item);
+            }
+        }
+
 
 
     }
