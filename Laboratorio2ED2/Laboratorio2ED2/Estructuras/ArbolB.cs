@@ -66,9 +66,17 @@ namespace Laboratorio2ED2
             if (sRaiz != null)
             {
                 raiz = convertirStringNodo(sRaiz);
+                int contadorhijos = 0;
+                for(int i = 0; i<raiz.Hijos.Length; i++)
+                {
+                    if (raiz.Hijos[i] != 0)
+                    {
+                        contadorhijos++;
+                    }
+                }
 
                 //evaluar con los valores si es mayor o menor
-                while (raiz.Hijos.Length != 0)
+                while (contadorhijos != 0)
                 {
                     for(int i = 0; i<raiz.Values.Length; i++)
                     {
@@ -92,7 +100,15 @@ namespace Laboratorio2ED2
                         break;
                     }
                 }
-                if(raiz.Values.Length == max)
+                int contadorValores = 0;
+                for (int i = 0; i < raiz.Values.Length; i++)
+                {
+                    if (raiz.Values[i].CompareTo("0")!=0)
+                    {
+                        contadorValores++;
+                    }
+                }
+                if (raiz.Values.Length == max)
                 {
                     divisionEscritura(raiz.ToString(), id);
                 }
