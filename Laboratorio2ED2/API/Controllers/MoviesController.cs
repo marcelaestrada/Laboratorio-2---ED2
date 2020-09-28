@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using API.Helpers;
 using API.Models;
@@ -32,9 +33,9 @@ namespace API.Controllers
                     return jsonPeliculas;
 
                 case "preorden":
-                // listaPeliculas = Storage.Instance.arbolPeliculas.PreOrder();
-                // jsonPeliculas = JsonConvert.SerializeObject(listaPeliculas);
-                //return jsonPeliculas;
+                     listaPeliculas = Storage.Instance.arbolPeliculas.PreOrder();
+                     jsonPeliculas = JsonConvert.SerializeObject(listaPeliculas);
+                     return jsonPeliculas;
 
                 case "postorden":
                     listaPeliculas = Storage.Instance.arbolPeliculas.PostOrder();
@@ -75,9 +76,12 @@ namespace API.Controllers
 
         //api/movies/populate
         [HttpPost("populate")]
-        public async Task<ActionResult> Post([FromBody] object peliculas)
+        public async Task<ActionResult> Post([FromForm] IFormFile file)
         {
-            List<Pelicula> dataSet = JsonConvert.DeserializeObject<List<Pelicula>>(peliculas.ToString());
+            using var contentInMemory = new MemoryStream();
+            await file.CopyToAsync(contentInMemory);
+            var peliculas = Encoding.ASCII.GetString(contentInMemory.ToArray());
+            List<Pelicula> dataSet = JsonConvert.DeserializeObject<List<Pelicula>>(peliculas);
 
             try
             {
@@ -89,14 +93,11 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-
                 return StatusCode(500);
             }
 
 
         }
-
-
 
         //api/movies/{id}
         [HttpDelete("{id}")]
