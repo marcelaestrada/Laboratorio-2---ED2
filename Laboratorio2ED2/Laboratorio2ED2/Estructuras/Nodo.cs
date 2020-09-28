@@ -106,7 +106,7 @@ namespace Laboratorio2ED2
             // string caracteresHijos = (8 * Order).ToString();
             //leftp rp
             return $"{Id:00000000;-0000000}|{Padre:00000000;-0000000}|" +
-               $"{string.Format("{0,-50}", HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}|{string.Format("{0,2}", CountOfValues)}\n";
+               $"{string.Format("{0,-50}", HijosToString())}|{string.Format("{0,-1000}", ValuesToString())}|{string.Format("{0,2}", CountOfValues.ToString())}\n";
 
             // string dato = "Hola";
             // dato.PadLeft(5,);

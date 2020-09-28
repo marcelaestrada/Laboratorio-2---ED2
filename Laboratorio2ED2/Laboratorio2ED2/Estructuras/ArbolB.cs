@@ -128,7 +128,6 @@ namespace Laboratorio2ED2
                     nuevoNodo.Order = gradoArbol;
                     nuevoNodo.CountOfValues++;
                     nuevoNodo.WriteToFile(ruta, 1);
-                    id++;
                 }
                 else
                 {
@@ -439,7 +438,7 @@ namespace Laboratorio2ED2
                         }
                     }
                     //Sobre escribir los tres nodos;
-                    FileStream file = new FileStream(this.ruta, FileMode.Open, FileAccess.Write);
+                   
                     nodoActual.WriteToFile(ruta, nodoActual.Id);
                     padreActual.WriteToFile(ruta, padreActual.Id);
                     hermanoDerecho.WriteToFile(ruta, hermanoDerecho.Id);

@@ -17,7 +17,7 @@ namespace API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-       
+
 
         [HttpGet("{transversal}")]
         public string GetRecorrido(string transversal)
@@ -57,6 +57,23 @@ namespace API.Controllers
             return Storage.Instance.gradoA;
         }
 
+        //Delete: api/movie
+        [HttpDelete]
+        public ActionResult DeleteArbol()
+        {
+            try
+            {
+                
+                System.IO.File.Delete(@".\ArchivoPeliculas.txt");
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+                
+            }
+        }
+
         //api/movies/populate
         [HttpPost("populate")]
         public async Task<ActionResult> Post([FromForm] IFormFile file)
@@ -81,7 +98,7 @@ namespace API.Controllers
 
 
         }
-      
+
         //api/movies/{id}
         [HttpDelete("{id}")]
         public ActionResult DeleteElement(string id)
